@@ -1,0 +1,19 @@
+{
+  "name": "pixlane-maison-elara-demo",
+  "version": "1.0.0",
+  "description": "Pixlane.co AI Web Studio için hazırlanmış Maison Elara butik moda demo referans sitesi.",
+  "scripts": {
+    "start": "npx serve .",
+    "preview": "npx serve ."
+  },
+  "keywords": [
+    "pixlane",
+    "butik",
+    "fashion",
+    "demo",
+    "landing-page"
+  ],
+  "author": "Pixlane.co",
+  "license": "MIT"
+}
+
