@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixlane — Dijital Ürünler Stüdyosu</title>
+<meta name="description" content="Web sitesi, e-ticaret, SaaS. Modern araçlarla, insan kontrolünde.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040f;
+  --deep: #080818;
+  --surface: #0d0d24;
+  --indigo: #4f46e5;
+  --indigo2: #6366f1;
+  --indigo3: #818cf8;
+  --lime: #b8ff3c;
+  --lime2: #d4ff6e;
+  --paper: #f8f7f3;
+  --paper2: #f0ede4;
+  --ink: #111118;
+  --muted-dark: #6b6b8a;
+  --muted-light: #6b6878;
+  --border-dark: rgba(99,102,241,0.15);
+  --border-light: rgba(17,17,24,0.1);
+  --mono: 'JetBrains Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --serif: 'Fraunces', serif;
+  --glow-indigo: 0 0 40px rgba(99,102,241,0.35);
+  --glow-lime: 0 0 40px rgba(184,255,60,0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--display); overflow-x: hidden; cursor: none; }
+
+/* GRAIN */
+body::after { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:9000; }
+
+/* CURSOR */
+.cur { width:8px; height:8px; background:var(--lime); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .1s,background .2s; mix-blend-mode:difference; }
+.cur-ring { width:32px; height:32px; border:1px solid rgba(99,102,241,0.6); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s,height .3s,opacity .3s; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:500; padding:0 56px; height:68px; display:flex; align-items:center; justify-content:space-between; background:rgba(4,4,15,0.85); backdrop-filter:blur(24px); border-bottom:1px solid var(--border-dark); }
+.nav-logo { font-family:var(--mono); font-size:13px; font-weight:500; letter-spacing:.2em; text-decoration:none; color:#f0f0ff; display:flex; align-items:center; gap:8px; }
+.nav-dot { width:6px; height:6px; background:var(--lime); border-radius:50%; box-shadow:var(--glow-lime); animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+.nav-links { display:flex; gap:36px; list-style:none; }
+.nav-links a { font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:rgba(240,240,255,.5); text-decoration:none; transition:color .2s; text-transform:uppercase; }
+.nav-links a:hover { color:#f0f0ff; }
+.nav-btn { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--void); background:var(--lime); padding:10px 22px; text-decoration:none; transition:all .2s; cursor:none; font-weight:500; }
+.nav-btn:hover { background:var(--lime2); box-shadow:var(--glow-lime); transform:translateY(-1px); }
+
+/* ═══════════════ HERO — DARK ═══════════════ */
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end; padding:68px 56px 72px; position:relative; overflow:hidden; background:var(--void); }
+
+.hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(99,102,241,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.07) 1px,transparent 1px); background-size:64px 64px; mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 100%); }
+.orb1 { position:absolute; top:10%; left:55%; width:600px; height:600px; background:radial-gradient(circle,rgba(99,102,241,0.2) 0%,transparent 70%); border-radius:50%; pointer-events:none; animation:float1 9s ease-in-out infinite; }
+.orb2 { position:absolute; top:50%; left:10%; width:350px; height:350px; background:radial-gradient(circle,rgba(184,255,60,0.07) 0%,transparent 70%); border-radius:50%; pointer-events:none; animation:float2 11s ease-in-out infinite; }
+@keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-50px)} }
+@keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,40px)} }
+
+.hero-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--indigo3); margin-bottom:40px; display:flex; align-items:center; gap:14px; }
+.hero-eyebrow::before { content:''; width:32px; height:1px; background:var(--indigo2); }
+
+.hero-title { font-family:var(--serif); font-size:clamp(60px,9vw,130px); line-height:.93; font-weight:300; letter-spacing:-.03em; margin-bottom:56px; color:#f0f0ff; }
+.hero-title .l2 { font-style:italic; color:var(--indigo3); }
+.hero-title .l3 { color:var(--lime); text-shadow:var(--glow-lime); }
+
+.hero-bottom { display:flex; align-items:flex-end; justify-content:space-between; gap:48px; }
+.hero-desc { font-family:var(--mono); font-size:15px; color:rgba(240,240,255,.55); line-height:1.8; max-width:400px; font-weight:300; }
+.hero-desc strong { color:rgba(240,240,255,.9); font-weight:400; }
+
+.hero-right { display:flex; flex-direction:column; align-items:flex-end; gap:28px; }
+.hero-stats { display:flex; gap:40px; }
+.hs { text-align:right; }
+.hs-num { font-family:var(--serif); font-size:44px; font-weight:300; line-height:1; color:#f0f0ff; }
+.hs-num sup { font-size:20px; color:var(--lime); vertical-align:super; }
+.hs-label { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:rgba(240,240,255,.4); text-transform:uppercase; margin-top:4px; }
+
+.hero-ctas { display:flex; gap:14px; align-items:center; }
+.btn-lime { display:inline-flex; align-items:center; gap:10px; background:var(--lime); color:var(--void); font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; padding:16px 32px; text-decoration:none; transition:all .25s; cursor:none; font-weight:600; }
+.btn-lime:hover { background:var(--lime2); box-shadow:var(--glow-lime); transform:translateY(-3px); }
+.btn-ghost-dark { display:inline-flex; align-items:center; gap:10px; border:1px solid rgba(99,102,241,.4); color:rgba(240,240,255,.6); font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; padding:16px 32px; text-decoration:none; transition:all .25s; cursor:none; }
+.btn-ghost-dark:hover { border-color:var(--indigo2); color:#f0f0ff; box-shadow:var(--glow-indigo); }
+
+/* AI BADGE — replaces ticker */
+.ai-band { background:var(--deep); border-top:1px solid var(--border-dark); border-bottom:1px solid var(--border-dark); padding:28px 56px; display:flex; align-items:center; justify-content:space-between; gap:40px; }
+.ai-band-left { display:flex; align-items:center; gap:16px; }
+.ai-dot-group { display:flex; gap:6px; }
+.ai-dot { width:8px; height:8px; border-radius:50%; background:var(--indigo2); opacity:.4; animation:dotPulse 1.8s ease-in-out infinite; }
+.ai-dot:nth-child(2) { animation-delay:.3s; background:var(--lime); }
+.ai-dot:nth-child(3) { animation-delay:.6s; }
+@keyframes dotPulse { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+.ai-band-text { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:rgba(240,240,255,.5); }
+.ai-band-text strong { color:var(--indigo3); }
+.ai-tags { display:flex; gap:10px; flex-wrap:wrap; }
+.ai-tag { font-family:var(--mono); font-size:10px; letter-spacing:.08em; padding:6px 12px; border:1px solid var(--border-dark); color:rgba(240,240,255,.4); text-transform:uppercase; }
+.ai-tag.lit { border-color:rgba(184,255,60,.3); color:var(--lime); }
+
+/* ═══════════════ LIGHT SECTIONS ═══════════════ */
+.s-label { font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--indigo2); margin-bottom:64px; display:flex; align-items:center; gap:16px; }
+.s-label::after { content:''; flex:1; height:1px; background:var(--border-light); }
+.s-label.dark-label { color:var(--indigo3); }
+.s-label.dark-label::after { background:var(--border-dark); }
+
+/* MANIFESTO — light */
+.manifesto { background:var(--paper); padding:120px 56px; }
+.mf-grid { display:grid; grid-template-columns:1fr 1.8fr; gap:100px; align-items:start; }
+.mf-left h2 { font-family:var(--serif); font-size:clamp(40px,4.5vw,64px); font-weight:300; line-height:1.05; position:sticky; top:100px; color:var(--ink); }
+.mf-left h2 em { font-style:italic; color:var(--indigo2); }
+.mf-text p { font-size:18px; line-height:1.85; color:var(--muted-light); margin-bottom:28px; max-width:600px; }
+.mf-text p:first-child { font-family:var(--serif); font-size:22px; font-style:italic; color:var(--ink); font-weight:300; }
+.mf-text strong { color:var(--ink); font-weight:600; }
+
+/* SERVICES — light */
+.services { background:var(--paper2); padding:120px 56px; }
+.svc-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border-light); border:1px solid var(--border-light); }
+.svc-card { background:var(--paper2); padding:52px 48px; position:relative; overflow:hidden; transition:background .3s; cursor:none; }
+.svc-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:linear-gradient(90deg,var(--indigo),var(--lime)); transform:scaleX(0); transform-origin:left; transition:transform .4s ease; }
+.svc-card:hover::after { transform:scaleX(1); }
+.svc-card:hover { background:var(--paper); }
+.svc-num { font-family:var(--mono); font-size:10px; color:var(--indigo2); letter-spacing:.15em; margin-bottom:36px; }
+.svc-icon { font-size:30px; margin-bottom:20px; display:block; }
+.svc-card h3 { font-family:var(--serif); font-size:30px; font-weight:300; margin-bottom:12px; color:var(--ink); }
+.svc-card p { color:var(--muted-light); font-size:14px; line-height:1.7; margin-bottom:28px; font-family:var(--mono); font-weight:300; }
+.svc-price { font-family:var(--mono); font-size:12px; letter-spacing:.08em; color:var(--indigo); font-weight:500; }
+
+/* PORTFOLIO — light */
+.portfolio { background:var(--paper); padding:120px 56px; }
+.port-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-light); border:1px solid var(--border-light); }
+.port-card { background:var(--paper); padding:0; position:relative; overflow:hidden; transition:all .3s; cursor:none; }
+.port-card:hover { background:var(--paper2); }
+.port-card:hover .port-overlay { opacity:1; }
+.port-img { width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; overflow:hidden; }
+.port-img.saas { background:linear-gradient(135deg,#0d0d24 0%,#1a1a4e 100%); }
+.port-img.hukuk { background:linear-gradient(135deg,#1a1208 0%,#3d2d10 100%); }
+.port-img.eticaret { background:linear-gradient(135deg,#0d1a0d 0%,#1a3d1a 100%); }
+.port-img.butik { background:linear-gradient(135deg,#1a0d1a 0%,#3d1040 100%); }
+.port-img.klinik { background:linear-gradient(135deg,#081a1a 0%,#103d3d 100%); }
+.port-img.freelancer { background:linear-gradient(135deg,#1a1008 0%,#3d2810 100%); }
+.port-img-inner { position:relative; z-index:1; }
+.port-overlay { position:absolute; inset:0; background:rgba(79,70,229,.15); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
+.port-overlay-btn { font-family:var(--mono); font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:#fff; background:var(--indigo); padding:10px 20px; }
+.port-info { padding:24px 28px; }
+.port-tags { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.port-tag { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; padding:4px 8px; border:1px solid var(--border-light); color:var(--muted-light); }
+.port-tag.live { border-color:rgba(184,255,60,.4); color:#4a7a00; background:rgba(184,255,60,.08); }
+.port-card h3 { font-family:var(--serif); font-size:20px; font-weight:300; margin-bottom:6px; color:var(--ink); }
+.port-card p { font-family:var(--mono); font-size:12px; color:var(--muted-light); line-height:1.5; font-weight:300; }
+
+/* PROCESS — light */
+.process { background:var(--paper2); padding:120px 56px; }
+.proc-title { font-family:var(--serif); font-size:clamp(40px,5.5vw,72px); font-weight:300; margin-bottom:80px; line-height:1; color:var(--ink); }
+.proc-title em { font-style:italic; color:var(--indigo2); }
+.proc-steps { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--border-light); border:1px solid var(--border-light); }
+.proc-step { background:var(--paper2); padding:40px 28px; transition:background .3s; display:flex; flex-direction:column; }
+.proc-step:hover { background:var(--paper); }
+.proc-n { font-family:var(--mono); font-size:10px; color:var(--indigo2); letter-spacing:.15em; margin-bottom:28px; display:block; }
+.proc-step h3 { font-family:var(--serif); font-size:20px; font-weight:300; margin-bottom:10px; color:var(--ink); }
+.proc-step p { font-size:12px; color:var(--muted-light); line-height:1.65; font-family:var(--mono); font-weight:300; flex:1; }
+.proc-tag { display:inline-block; font-family:var(--mono); font-size:9px; letter-spacing:.12em; padding:4px 10px; margin-top:20px; border:1px solid rgba(99,102,241,.3); color:var(--indigo); align-self:flex-start; text-transform:uppercase; }
+
+/* WHY — light */
+.why { background:var(--paper); padding:120px 56px; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.why-left h2 { font-family:var(--serif); font-size:clamp(40px,5vw,68px); font-weight:300; line-height:1.05; margin-bottom:28px; color:var(--ink); }
+.why-left h2 em { font-style:italic; color:var(--indigo2); }
+.why-left p { font-size:15px; color:var(--muted-light); line-height:1.8; margin-bottom:20px; font-family:var(--mono); font-weight:300; }
+.why-items { display:flex; flex-direction:column; gap:1px; background:var(--border-light); border:1px solid var(--border-light); }
+.why-item { background:var(--paper); padding:22px 28px; display:flex; align-items:flex-start; gap:20px; transition:background .2s; }
+.why-item:hover { background:var(--paper2); }
+.why-n { font-family:var(--mono); font-size:10px; color:var(--indigo2); min-width:28px; padding-top:3px; letter-spacing:.1em; }
+.why-item h4 { font-size:14px; font-weight:600; margin-bottom:4px; color:var(--ink); }
+.why-item p { font-size:12px; color:var(--muted-light); line-height:1.5; font-family:var(--mono); font-weight:300; }
+
+/* ═══════════════ PRICING — DARK ═══════════════ */
+.pricing { background:var(--deep); padding:120px 56px; }
+.pricing-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:72px; }
+.pricing-top h2 { font-family:var(--serif); font-size:clamp(40px,5.5vw,72px); font-weight:300; line-height:.95; color:#f0f0ff; }
+.pricing-top h2 em { font-style:italic; color:var(--lime); text-shadow:var(--glow-lime); }
+.pricing-note { font-family:var(--mono); font-size:12px; color:rgba(240,240,255,.4); max-width:260px; text-align:right; line-height:1.7; }
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-dark); border:1px solid var(--border-dark); }
+.p-card { background:var(--surface); padding:48px 40px; position:relative; transition:all .35s; cursor:none; }
+.p-card:hover { background:var(--deep); transform:translateY(-5px); box-shadow:0 24px 60px rgba(0,0,0,.5); }
+.p-card.hot { background:linear-gradient(145deg,#3730a3 0%,var(--indigo) 100%); border:1px solid rgba(184,255,60,.25); }
+.p-card.hot:hover { transform:translateY(-8px); box-shadow:0 24px 60px rgba(79,70,229,.4),var(--glow-indigo); }
+.p-badge { font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--lime); background:rgba(184,255,60,.1); border:1px solid rgba(184,255,60,.3); padding:5px 12px; display:inline-block; margin-bottom:28px; }
+.p-tag { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:rgba(240,240,255,.4); margin-bottom:28px; display:block; }
+.p-name { font-family:var(--serif); font-size:26px; font-weight:300; margin-bottom:8px; color:#f0f0ff; }
+.p-price { font-family:var(--mono); font-size:52px; font-weight:300; line-height:1; margin-bottom:4px; letter-spacing:-.02em; color:#f0f0ff; }
+.p-card.hot .p-price { color:var(--lime); text-shadow:var(--glow-lime); }
+.p-period { font-family:var(--mono); font-size:11px; color:rgba(240,240,255,.4); margin-bottom:40px; }
+.p-features { list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:40px; }
+.p-features li { font-size:13px; color:rgba(240,240,255,.55); display:flex; align-items:flex-start; gap:10px; line-height:1.4; font-family:var(--mono); font-weight:300; }
+.p-card.hot .p-features li { color:rgba(240,240,255,.8); }
+.p-features li::before { content:'→'; color:var(--indigo3); flex-shrink:0; }
+.p-card.hot .p-features li::before { color:var(--lime); }
+.p-btn { display:block; text-align:center; padding:16px 24px; font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:all .25s; cursor:none; border:1px solid var(--border-dark); color:rgba(240,240,255,.5); }
+.p-btn:hover { border-color:var(--indigo2); color:#f0f0ff; box-shadow:var(--glow-indigo); }
+.p-card.hot .p-btn { background:var(--lime); color:var(--void); border:none; font-weight:600; font-size:13px; }
+.p-card.hot .p-btn:hover { background:var(--lime2); box-shadow:var(--glow-lime); transform:translateY(-2px); }
+
+/* ABOUT — light */
+.about { background:var(--paper2); padding:120px 56px; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.about-left h2 { font-family:var(--serif); font-size:clamp(36px,4vw,56px); font-weight:300; line-height:1.1; margin-bottom:28px; color:var(--ink); }
+.about-left h2 em { font-style:italic; color:var(--indigo2); }
+.about-left p { font-size:14px; color:var(--muted-light); line-height:1.8; margin-bottom:20px; font-family:var(--mono); font-weight:300; }
+.tech-stack { display:flex; flex-wrap:wrap; gap:8px; margin-top:32px; }
+.tech-tag { font-family:var(--mono); font-size:10px; letter-spacing:.08em; padding:6px 12px; border:1px solid var(--border-light); color:var(--muted-light); transition:all .2s; }
+.tech-tag:hover { border-color:var(--indigo2); color:var(--indigo); }
+.about-right { display:flex; flex-direction:column; gap:1px; background:var(--border-light); border:1px solid var(--border-light); }
+.a-detail { background:var(--paper2); padding:20px 24px; transition:background .2s; }
+.a-detail:hover { background:var(--paper); }
+.a-label { font-family:var(--mono); font-size:9px; letter-spacing:.15em; color:var(--indigo2); text-transform:uppercase; margin-bottom:6px; }
+.a-value { font-size:13px; color:var(--ink); line-height:1.5; font-family:var(--mono); font-weight:300; }
+
+/* CONTACT — dark */
+.contact { background:var(--void); padding:120px 56px; position:relative; overflow:hidden; }
+.contact::before { content:''; position:absolute; bottom:-300px; left:50%; transform:translateX(-50%); width:900px; height:500px; background:radial-gradient(ellipse,rgba(99,102,241,.12) 0%,transparent 70%); pointer-events:none; }
+.contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:end; }
+.contact-left h2 { font-family:var(--serif); font-size:clamp(48px,8vw,110px); font-weight:300; line-height:.9; margin-bottom:32px; color:#f0f0ff; }
+.contact-left h2 em { font-style:italic; color:var(--lime); text-shadow:var(--glow-lime); }
+.contact-left p { font-size:14px; color:rgba(240,240,255,.5); line-height:1.8; font-family:var(--mono); font-weight:300; }
+.c-links { display:flex; flex-direction:column; }
+.c-link { display:flex; align-items:center; justify-content:space-between; padding:22px 0; border-bottom:1px solid var(--border-dark); text-decoration:none; color:#f0f0ff; transition:padding-left .3s,border-color .3s; }
+.c-link:first-child { border-top:1px solid var(--border-dark); }
+.c-link:hover { padding-left:14px; border-color:var(--indigo2); }
+.c-link-label { font-family:var(--mono); font-size:9px; letter-spacing:.15em; color:var(--indigo3); text-transform:uppercase; margin-bottom:5px; }
+.c-link-value { font-size:17px; font-family:var(--display); }
+.c-arrow { font-size:22px; opacity:.3; transition:opacity .2s,transform .2s; color:var(--lime); }
+.c-link:hover .c-arrow { opacity:1; transform:translate(5px,-5px); }
+
+footer { background:var(--void); color:rgba(240,240,255,.3); padding:28px 56px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-dark); }
+footer span { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+.ft { font-family:var(--serif); font-style:italic; font-size:14px; color:var(--indigo3); }
+
+/* FADE UP */
+.fu { opacity:0; transform:translateY(28px); transition:opacity .8s ease,transform .8s ease; }
+.fu.vis { opacity:1; transform:translateY(0); }
+.fu1{transition-delay:.1s}.fu2{transition-delay:.2s}.fu3{transition-delay:.3s}.fu4{transition-delay:.4s}
+
+/* ORDER FORM */
+.order-section { background:var(--paper2); padding:120px 56px; }
+.order-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; align-items:start; }
+.order-left h2 { font-family:var(--serif); font-size:clamp(36px,4vw,56px); font-weight:300; line-height:1.05; margin-bottom:20px; color:var(--ink); }
+.order-left p { font-size:14px; color:var(--muted-light); line-height:1.8; margin-bottom:36px; font-family:var(--mono); font-weight:300; }
+.order-promises { display:flex; flex-direction:column; gap:12px; }
+.op { display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:13px; color:var(--ink); }
+.op-icon { color:var(--indigo2); font-size:16px; }
+
+.order-form { display:flex; flex-direction:column; gap:20px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-group { display:flex; flex-direction:column; gap:8px; }
+.form-label { font-family:var(--mono); font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--indigo2); }
+.form-input { background:var(--paper); border:1px solid var(--border-light); color:var(--ink); font-family:var(--mono); font-size:13px; padding:14px 16px; outline:none; transition:border-color .2s,box-shadow .2s; width:100%; font-weight:300; -webkit-appearance:none; }
+.form-input:focus { border-color:var(--indigo2); box-shadow:0 0 0 3px rgba(99,102,241,.1); }
+.form-input::placeholder { color:var(--muted-light); }
+.form-textarea { min-height:130px; resize:vertical; }
+.form-select-wrap { position:relative; }
+.form-select { appearance:none; cursor:pointer; }
+.form-select-wrap::after { content:'↓'; position:absolute; right:16px; top:50%; transform:translateY(-50%); font-family:var(--mono); font-size:12px; color:var(--muted-light); pointer-events:none; }
+.form-submit { background:var(--indigo); color:#f0f0ff; font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; padding:18px 32px; border:none; cursor:pointer; transition:all .25s; display:flex; align-items:center; justify-content:center; gap:12px; font-weight:500; margin-top:4px; }
+.form-submit:hover { background:var(--indigo2); box-shadow:var(--glow-indigo); transform:translateY(-2px); }
+.form-submit span { transition:transform .2s; }
+.form-submit:hover span { transform:translateX(4px); }
+
+/* MOBILE */
+@media(max-width:960px){
+  nav { padding:0 24px; } .nav-links { display:none; }
+  .hero,.manifesto,.services,.portfolio,.process,.why,.pricing,.about,.contact { padding:80px 24px; }
+  .hero { padding-top:88px; }
+  .hero-bottom { flex-direction:column; align-items:flex-start; gap:32px; }
+  .hero-right { align-items:flex-start; }
+  .hero-stats { gap:24px; }
+  .hs { text-align:left; }
+  .order-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+  .svc-grid,.why-grid,.pricing-grid,.port-grid { grid-template-columns:1fr; }
+  .proc-steps { grid-template-columns:repeat(2,1fr); }
+  .pricing-top,.ai-band { flex-direction:column; align-items:flex-start; gap:20px; }
+  .pricing-note { text-align:left; }
+  footer { flex-direction:column; gap:10px; text-align:center; }
+  body { cursor:auto; } .cur,.cur-ring { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PIXLANE<span class="nav-dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Hizmetler</a></li>
+    <li><a href="#portfolio">Projeler</a></li>
+    <li><a href="#pricing">Fiyatlar</a></li>
+    <li><a href="#about">Hakkımızda</a></li>
+  </ul>
+  <a href="#contact" class="nav-btn">İletişim →</a>
+</nav>
+
+<!-- HERO — DARK -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+  <div class="hero-eyebrow">İstanbul, 2025 — Dijital Ürünler Stüdyosu</div>
+  <h1 class="hero-title">
+    İnsan vizyonu,<br>
+    <span class="l2">yapay zeka</span><br>
+    <span class="l3">hassasiyeti.</span>
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">Web sitesi, e-ticaret, SaaS.<br><strong>Modern araçlarla, insan kontrolünde.</strong><br>Şişirilmiş fiyat yok — sadece işe yarayan ürünler.</p>
+    <div class="hero-right">
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-num">7<sup>gün</sup></div><div class="hs-label">Ort. teslimat</div></div>
+        <div class="hs"><div class="hs-num">%100</div><div class="hs-label">Kaynak kod size</div></div>
+        <div class="hs"><div class="hs-num">Sabit</div><div class="hs-label">Fiyat garantisi</div></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn-lime">Hemen Başla →</a>
+        <a href="#services" class="btn-ghost-dark">Hizmetleri Gör</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI BAND -->
+<div class="ai-band">
+  <div class="ai-band-left">
+    <div class="ai-dot-group"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>
+    <span class="ai-band-text">Modern araçlarla üretiyoruz. <strong>İnsan kararıyla</strong> teslim ediyoruz.</span>
+  </div>
+  <div class="ai-tags">
+    <span class="ai-tag lit">AI Destekli</span>
+    <span class="ai-tag">React</span>
+    <span class="ai-tag">Node.js</span>
+    <span class="ai-tag">Shopify</span>
+    <span class="ai-tag">İyzico</span>
+    <span class="ai-tag">Vercel</span>
+  </div>
+</div>
+
+<!-- MANIFESTO — LIGHT -->
+<section class="manifesto">
+  <div class="s-label">01 — Manifesto</div>
+  <div class="mf-grid">
+    <div class="mf-left fu"><h2>Neden<br><em>Pixlane?</em></h2></div>
+    <div class="mf-text fu fu1">
+      <p>Bazı şeyler yavaş yapılmak zorunda değil.</p>
+      <p>Pixlane, dijital ürünleri hızlı, temiz ve dürüstçe teslim etmek için kuruldu. Kurumsal web sitesinden e-ticaret'e, SaaS'tan marka kimliğine — her projede aynı prensip geçerli: gereksiz hiçbir şey yok.</p>
+      <p>Modern araçları kullanıyoruz. En iyilerini. Tasarımda, kodda, süreçte — teknolojiyi takip etmek bir tercih değil, müşterimize karşı bir <strong>sorumluluk.</strong></p>
+      <p>Ama her projenin arkasında bir insan var. Sizi dinleyen, hedeflerinizi anlayan, teslimatta hesap veren. Araçlar değişir, bu değişmez.</p>
+      <p>Şişirilmiş fiyat yok. Uzayan toplantı yok. Kaynak kodunuz size ait, her zaman. Hızlı olmak kaliteden ödün vermek değil — <strong>doğru çalışmanın sonucu.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES — LIGHT -->
+<section class="services" id="services">
+  <div class="s-label">02 — Hizmetler</div>
+  <div class="svc-grid">
+    <div class="svc-card fu"><div class="svc-num">01</div><span class="svc-icon">◻</span><h3>Kurumsal Web Sitesi</h3><p>Hızlı, dönüşüm odaklı landing page ve kurumsal siteler. Etkileyici tasarım, mobil uyumlu, SEO hazır.</p><div class="svc-price">₺1.990'dan başlayan · 5–7 gün</div></div>
+    <div class="svc-card fu fu1"><div class="svc-num">02</div><span class="svc-icon">◈</span><h3>E-Ticaret</h3><p>Ödeme entegrasyonu, ürün yönetimi ve stok takibi ile tam online mağaza çözümü.</p><div class="svc-price">₺3.990'dan başlayan · 7–14 gün</div></div>
+    <div class="svc-card fu fu2"><div class="svc-num">03</div><span class="svc-icon">◎</span><h3>SaaS / Web Uygulaması</h3><p>Kullanıcı girişi, dashboard ve ölçeklenebilir altyapı ile özel web uygulaması geliştirme.</p><div class="svc-price">₺7.990'dan başlayan · 2–4 hafta</div></div>
+    <div class="svc-card fu fu3"><div class="svc-num">04</div><span class="svc-icon">◇</span><h3>Sosyal Medya</h3><p>Görsel kimlik, içerik takvimi, marka şablonları ve aylık sosyal medya yönetimi.</p><div class="svc-price">₺2.500/ay'dan başlayan</div></div>
+  </div>
+</section>
+
+<!-- PORTFOLIO — LIGHT -->
+<section class="portfolio" id="portfolio">
+  <div class="s-label">03 — Projeler</div>
+  <div class="port-grid">
+    <div class="port-card fu">
+      <div class="port-img saas"><div class="port-img-inner">💳</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag live">● Canlı</span><span class="port-tag">SaaS</span><span class="port-tag">React</span></div>
+        <h3>TahsilatKolay</h3>
+        <p>WhatsApp + e-posta ile fatura, ödeme linki ve tahsilat takip platformu.</p>
+      </div>
+    </div>
+    <div class="port-card fu fu1">
+      <div class="port-img hukuk"><div class="port-img-inner">⚖️</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag">Kurumsal</span><span class="port-tag">SEO</span></div>
+        <h3>Hukuk Bürosu</h3>
+        <p>Online randevu, avukat profilleri ve SEO odaklı blog ile kurumsal site.</p>
+      </div>
+    </div>
+    <div class="port-card fu fu2">
+      <div class="port-img eticaret"><div class="port-img-inner">🛒</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag">E-Ticaret</span><span class="port-tag">İyzico</span></div>
+        <h3>Organik Market</h3>
+        <p>Kategori yönetimi, sepet ve ödeme entegrasyonu ile gıda e-ticaret platformu.</p>
+      </div>
+    </div>
+    <div class="port-card fu fu3">
+      <div class="port-img butik"><div class="port-img-inner">👗</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag">E-Ticaret</span><span class="port-tag">Moda</span></div>
+        <h3>Butik Mağaza</h3>
+        <p>Ürün kataloğu, sipariş yönetimi ve kargo takibi ile moda e-ticaret sitesi.</p>
+      </div>
+    </div>
+    <div class="port-card fu fu1">
+      <div class="port-img klinik"><div class="port-img-inner">🏥</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag">Sağlık</span><span class="port-tag">Randevu</span></div>
+        <h3>Özel Klinik</h3>
+        <p>Online randevu, doktor profilleri ve Google Haritalar entegrasyonu.</p>
+      </div>
+    </div>
+    <div class="port-card fu fu2">
+      <div class="port-img freelancer"><div class="port-img-inner">💼</div><div class="port-overlay"><span class="port-overlay-btn">İncele ↗</span></div></div>
+      <div class="port-info">
+        <div class="port-tags"><span class="port-tag">SaaS</span><span class="port-tag">CRM</span></div>
+        <h3>Müşteri Takip</h3>
+        <p>Küçük işletmelere özel müşteri yönetimi ve satış pipeline uygulaması.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS — LIGHT -->
+<section class="process" id="process">
+  <div class="s-label">04 — Nasıl çalışıyoruz</div>
+  <h2 class="proc-title fu">Şeffaf süreç,<br><em>gerçek sonuçlar.</em></h2>
+  <div class="proc-steps">
+    <div class="proc-step fu"><span class="proc-n">01</span><h3>Keşif</h3><p>Kısa görüşmeyle hedeflerinizi anlıyoruz. Jargon yok, beklenti yönetimi var.</p><span class="proc-tag">İnsan</span></div>
+    <div class="proc-step fu fu1"><span class="proc-n">02</span><h3>Teklif</h3><p>Net kapsam, sabit fiyat, gerçekçi süre. Her şey yazılı, netleştirilmiş.</p><span class="proc-tag">İnsan</span></div>
+    <div class="proc-step fu fu2"><span class="proc-n">03</span><h3>Geliştirme</h3><p>Modern araçlarla hızlı üretim. Günlük güncellemeler, canlı önizleme.</p><span class="proc-tag">Teknoloji</span></div>
+    <div class="proc-step fu fu3"><span class="proc-n">04</span><h3>Revizyon</h3><p>İki tur revizyon dahil. Birlikte doğru sonuca ulaşırız.</p><span class="proc-tag">İnsan + Teknoloji</span></div>
+    <div class="proc-step fu fu4"><span class="proc-n">05</span><h3>Yayın</h3><p>Deployment biz hallederiz. Zamanında, sorunsuz, kaynak kodu size ait.</p><span class="proc-tag">İnsan</span></div>
+  </div>
+</section>
+
+<!-- WHY — LIGHT -->
+<section class="why">
+  <div class="s-label">05 — Neden biz?</div>
+  <div class="why-grid">
+    <div class="why-left fu">
+      <h2>Ajans kalitesi,<br><em>gerçek fiyat.</em></h2>
+      <p>Büyük ajanslar süreci büyütür, çünkü büyük süreç büyük fatura demek. Biz tersini seçtik.</p>
+      <p>Doğru araçları, doğru zamanda, doğru amaçla kullanmak — bu kadar.</p>
+    </div>
+    <div class="why-items fu fu2">
+      <div class="why-item"><span class="why-n">01</span><div><h4>Dürüst fiyatlandırma</h4><p>Gizli ücret yok. Sabit fiyat, baştan netleştirilir.</p></div></div>
+      <div class="why-item"><span class="why-n">02</span><div><h4>Gerçekten hızlı</h4><p>Çoğu proje 2 haftadan kısa. Gereksiz bekleme yok.</p></div></div>
+      <div class="why-item"><span class="why-n">03</span><div><h4>Gerçek kod, gerçek performans</h4><p>Page builder yok. Her şey sıfırdan, ölçeklenebilir.</p></div></div>
+      <div class="why-item"><span class="why-n">04</span><div><h4>Her şey size ait</h4><p>Tam kaynak kodu. Kilitlenme yok, rehin ücreti yok.</p></div></div>
+      <div class="why-item"><span class="why-n">05</span><div><h4>Direkt iletişim</h4><p>Ürününüzü yapan kişiyle konuşursunuz. Aracı yok.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING — DARK -->
+<section class="pricing" id="pricing">
+  <div class="s-label dark-label">06 — Şeffaf fiyatlar</div>
+  <div class="pricing-top">
+    <h2 class="fu">Hemen<br>başlayalım<br><em>mı?</em></h2>
+    <p class="pricing-note fu fu2">Tüm paketlerde kaynak kod size ait. Sürpriz ücret yok, sabit fiyat garantisi.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="p-card fu">
+      <span class="p-tag">Başlangıç</span>
+      <div class="p-name">Landing Page</div>
+      <div class="p-price">₺1.990</div>
+      <div class="p-period">tek seferlik · sürpriz yok</div>
+      <ul class="p-features"><li>Landing page / kurumsal site</li><li>Mobil uyumlu tasarım</li><li>İletişim formu entegrasyonu</li><li>SEO temelleri</li><li>2 tur revizyon</li><li>5–7 günde teslim</li></ul>
+      <a href="#order" class="p-btn">Başlayalım →</a>
+    </div>
+    <div class="p-card hot fu fu1">
+      <span class="p-badge">★ En Popüler</span>
+      <div class="p-name">E-Ticaret</div>
+      <div class="p-price">₺3.990</div>
+      <div class="p-period">tek seferlik · en popüler</div>
+      <ul class="p-features"><li>E-ticaret mağaza (50 ürüne kadar)</li><li>Shopier / PayTR entegrasyonu</li><li>Admin paneli</li><li>E-posta bildirimleri</li><li>3 tur revizyon</li><li>10–14 günde teslim</li></ul>
+      <a href="#order" class="p-btn">Hemen Başla →</a>
+    </div>
+    <div class="p-card fu fu2">
+      <span class="p-tag">Özel / SaaS</span>
+      <div class="p-name">Web Uygulaması</div>
+      <div class="p-price">₺7.990+</div>
+      <div class="p-period">kapsama göre fiyat</div>
+      <ul class="p-features"><li>SaaS / web uygulaması</li><li>Kullanıcı girişi ve yetkilendirme</li><li>Özel veritabanı & API</li><li>Admin paneli</li><li>Sınırsız revizyon</li><li>Kapsama göre süre</li></ul>
+      <a href="#order" class="p-btn">Konuşalım →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER FORM — LIGHT -->
+<section class="order-section" id="order">
+  <div class="s-label">07 — Projenizi Anlatın</div>
+  <div class="order-grid">
+    <div class="order-left fu">
+      <h2>Ne yapmak<br>istiyorsunuz?</h2>
+      <p>Kafanızdaki projeyi kısaca anlatın. 24 saat içinde size özel teklif ve Google Meet daveti gönderelim.</p>
+      <div class="order-promises">
+        <div class="op"><span class="op-icon">→</span><span>24 saat içinde dönüş</span></div>
+        <div class="op"><span class="op-icon">→</span><span>Ücretsiz 30 dk görüşme</span></div>
+        <div class="op"><span class="op-icon">→</span><span>Net fiyat, net süre</span></div>
+      </div>
+    </div>
+    <div class="order-right fu fu1">
+      <form class="order-form" action="https://formspree.io/f/YOURFORMID" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Adınız</label>
+            <input type="text" name="name" class="form-input" placeholder="Ahmet Yılmaz" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-posta</label>
+            <input type="email" name="email" class="form-input" placeholder="ahmet@sirket.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ne tür bir proje?</label>
+          <div class="form-select-wrap">
+            <select name="type" class="form-input form-select">
+              <option value="">Seçin...</option>
+              <option>Landing Page / Kurumsal Site</option>
+              <option>E-Ticaret Sitesi</option>
+              <option>SaaS / Web Uygulaması</option>
+              <option>Sosyal Medya Yönetimi</option>
+              <option>Diğer</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Projenizi anlatın</label>
+          <textarea name="message" class="form-input form-textarea" placeholder="Ne yapmasını istiyorsunuz? Hangi sektördesiniz? Varsa referans site var mı? Ne zaman lazım?" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bütçeniz (opsiyonel)</label>
+          <div class="form-select-wrap">
+            <select name="budget" class="form-input form-select">
+              <option value="">Belirtmek istemiyorum</option>
+              <option>₺1.000 – ₺2.500</option>
+              <option>₺2.500 – ₺5.000</option>
+              <option>₺5.000 – ₺10.000</option>
+              <option>₺10.000+</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Teklif İste — Ücretsiz <span>→</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT — LIGHT -->
+<section class="about" id="about">
+  <div class="s-label">07 — Hakkımızda</div>
+  <div class="about-grid">
+    <div class="about-left fu">
+      <h2>Sade teknoloji,<br><em>gerçek sonuçlar.</em></h2>
+      <p>Pixlane, İstanbul merkezli bir dijital ürünler stüdyosu. Web sitesi, e-ticaret ve SaaS uygulamalarını kurumsal kalitede, erişilebilir fiyatlarla teslim ediyoruz.</p>
+      <p>Şeffaf süreç, sabit fiyat, hızlı teslimat. Kaynak kodunuz size ait, her zaman.</p>
+      <div class="tech-stack">
+        <span class="tech-tag">React</span><span class="tech-tag">TypeScript</span><span class="tech-tag">Node.js</span><span class="tech-tag">PostgreSQL</span><span class="tech-tag">Shopify</span><span class="tech-tag">İyzico</span><span class="tech-tag">Vercel</span><span class="tech-tag">Railway</span>
+      </div>
+    </div>
+    <div class="about-right fu fu2">
+      <div class="a-detail"><div class="a-label">Şirket</div><div class="a-value">Pixlane Dijital Hizmetler</div></div>
+      <div class="a-detail"><div class="a-label">Kuruluş</div><div class="a-value">2025, İstanbul</div></div>
+      <div class="a-detail"><div class="a-label">Adres</div><div class="a-value">Vizyon Park Ofis Plazaları, Yenibosna Merkez Mh.<br>29 Ekim Cd. B1 Blok No:5 Kat:7 — Bahçelievler</div></div>
+      <div class="a-detail"><div class="a-label">E-posta</div><div class="a-value">info@pixlane.co</div></div>
+      <div class="a-detail"><div class="a-label">Platform</div><div class="a-value">Fiverr · LinkedIn · Instagram</div></div>
+      <div class="a-detail"><div class="a-label">Dil</div><div class="a-value">Türkçe · English</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT — DARK -->
+<section class="contact" id="contact">
+  <div class="s-label dark-label">08 — İletişim</div>
+  <div class="contact-inner">
+    <div class="contact-left fu">
+      <h2>Bir şeyler<br>inşa edelim<br><em>mi?</em></h2>
+      <p>Projenizi anlatın. Kısa bir görüşmeyle kapsamı belirleyelim, size net bir fiyat ve süre verelim.</p>
+    </div>
+    <div class="c-links fu fu2">
+      <a href="mailto:info@pixlane.co" class="c-link">
+        <div><div class="c-link-label">E-posta</div><div class="c-link-value">info@pixlane.co</div></div>
+        <span class="c-arrow">↗</span>
+      </a>
+      <a href="MEET_LINK_BURAYA" class="c-link" target="_blank">
+        <div><div class="c-link-label">Ücretsiz Görüşme</div><div class="c-link-value">Google Meet — 30 dk</div></div>
+        <span class="c-arrow">↗</span>
+      </a>
+      <a href="#" class="c-link">
+        <div><div class="c-link-label">Fiverr</div><div class="c-link-value">fiverr.com/pixlane</div></div>
+        <span class="c-arrow">↗</span>
+      </a>
+      <a href="#" class="c-link">
+        <div><div class="c-link-label">LinkedIn</div><div class="c-link-value">linkedin.com/company/pixlane</div></div>
+        <span class="c-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Pixlane · pixlane.co</span>
+  <span class="ft">Human vision. Precise execution.</span>
+  <span>İstanbul, Türkiye</span>
+</footer>
+
+<script>
+const cur=document.getElementById('cur');
+const ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+function animRing(){ rx+=(mx-rx)*.1; ry+=(my-ry)*.1; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); }
+animRing();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cur.style.transform='translate(-50%,-50%) scale(3)'; ring.style.width='56px'; ring.style.height='56px'; ring.style.opacity='.25'; });
+  el.addEventListener('mouseleave',()=>{ cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.width='32px'; ring.style.height='32px'; ring.style.opacity='1'; });
+});
+const obs=new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.08});
+document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
