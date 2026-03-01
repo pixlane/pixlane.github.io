@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixlane — Dijital Ürünler Stüdyosu</title>
+<meta name="description" content="Dijital ürünler stüdyosu. Web sitesi, e-ticaret, SaaS. Hızlı, temiz, dürüst.">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: light only; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f3ee;
+    --paper2: #eeebe3;
+    --accent: #c8f03c;
+    --accent2: #1a1a2e;
+    --muted: #7a7570;
+    --border: rgba(14,14,14,0.1);
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'Instrument Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--ink);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, background 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0.4;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    mix-blend-mode: multiply;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-logo span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1px;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.5; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 0 48px;
+    padding-top: 120px;
+    padding-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif);
+    font-size: clamp(120px, 20vw, 280px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(14,14,14,0.06);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    gap: 48px;
+    padding-top: 80px;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 40px;
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    border: none;
+    cursor: none;
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .btn-primary svg { transition: transform 0.2s; }
+  .btn-primary:hover svg { transform: translate(3px, -3px); }
+
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    cursor: none;
+  }
+  .btn-ghost:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+  }
+  .stat {
+    flex: 1;
+    padding-right: 24px;
+    border-right: 1px solid var(--border);
+    margin-right: 24px;
+  }
+  .stat:last-child { border-right: none; margin-right: 0; }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .hero-bottom-left {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    transform-origin: left;
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleX(1); opacity: 1; }
+    50% { transform: scaleX(0.3); opacity: 0.3; }
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 0 48px;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .marquee-item span {
+    color: var(--accent);
+    font-size: 18px;
+    opacity: 1;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION BASE */
+  section {
+    padding: 120px 48px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* MANIFESTO */
+  .manifesto {
+    background: var(--paper2);
+  }
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .manifesto-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 54px);
+    line-height: 1.1;
+    font-weight: 400;
+    position: sticky;
+    top: 120px;
+  }
+  .manifesto-left h2 em { font-style: italic; color: var(--muted); }
+
+  .manifesto-text p {
+    font-size: 19px;
+    line-height: 1.8;
+    color: var(--ink);
+    margin-bottom: 28px;
+    max-width: 640px;
+  }
+  .manifesto-text p:first-child {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .manifesto-text strong { font-weight: 600; }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--paper);
+    padding: 48px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-card:hover { background: var(--paper2); }
+
+  .service-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+  }
+  .service-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-card h3 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .service-card p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .service-price {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  /* PROCESS */
+  .process { background: var(--ink); color: var(--paper); }
+  .process .section-label { color: rgba(245,243,238,0.4); }
+  .process .section-label::after { background: rgba(245,243,238,0.1); }
+
+  .process-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 400;
+    margin-bottom: 80px;
+    max-width: 600px;
+    line-height: 1.1;
+  }
+  .process-title em { font-style: italic; color: rgba(245,243,238,0.4); }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: rgba(245,243,238,0.08);
+  }
+  .process-step {
+    background: var(--ink);
+    padding: 40px 32px;
+    transition: background 0.3s;
+  }
+  .process-step:hover { background: #1a1a1a; }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .process-step h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--paper);
+  }
+  .process-step p {
+    font-size: 14px;
+    color: rgba(245,243,238,0.5);
+    line-height: 1.6;
+  }
+  .step-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    margin-top: 16px;
+    border: 1px solid rgba(200,240,60,0.3);
+    color: var(--accent);
+  }
+
+  /* WHY */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .why-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1.05;
+    margin-bottom: 40px;
+  }
+  .why-left h2 em { font-style: italic; color: var(--muted); }
+  .why-left p {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .why-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .why-item {
+    background: var(--paper);
+    padding: 24px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: background 0.2s;
+  }
+  .why-item:hover { background: var(--paper2); }
+  .why-item-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    min-width: 24px;
+    padding-top: 3px;
+  }
+  .why-item-text h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .why-item-text p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* PRICING */
+  .pricing { background: var(--paper2); }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .pricing-card {
+    background: var(--paper2);
+    padding: 48px 40px;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pricing-card:hover { background: var(--paper); }
+  .pricing-card.featured {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .pricing-card.featured:hover { background: #1a1a1a; }
+
+  .pricing-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    display: block;
+  }
+  .pricing-card.featured .pricing-tag { color: var(--accent); }
+
+  .pricing-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .pricing-price {
+    font-family: var(--mono);
+    font-size: 40px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .pricing-period {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+  .pricing-card.featured .pricing-period { color: rgba(245,243,238,0.5); }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .pricing-features li {
+    font-size: 14px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.4;
+  }
+  .pricing-card.featured .pricing-features li { color: rgba(245,243,238,0.7); }
+  .pricing-features li::before {
+    content: '→';
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .pricing-card.featured .pricing-features li::before { color: var(--accent); }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    padding: 14px 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .pricing-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .pricing-card.featured .pricing-btn {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: transparent;
+  }
+  .pricing-card.featured .pricing-btn:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  .about-left h2 em { font-style: italic; color: var(--muted); }
+  .about-left p {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .about-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .about-detail {
+    padding: 28px;
+    border: 1px solid var(--border);
+    background: var(--paper2);
+  }
+  .about-detail-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .about-detail-value {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .tech-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tech-tag:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  /* CONTACT */
+  .contact { background: var(--ink); color: var(--paper); }
+  .contact .section-label { color: rgba(245,243,238,0.4); }
+  .contact .section-label::after { background: rgba(245,243,238,0.1); }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+  }
+  .contact-left h2 {
+    font-family: var(--serif);
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 400;
+    line-height: 1.0;
+    margin-bottom: 32px;
+  }
+  .contact-left h2 em { font-style: italic; color: rgba(245,243,238,0.4); }
+  .contact-left p {
+    font-size: 17px;
+    color: rgba(245,243,238,0.6);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(245,243,238,0.1);
+    text-decoration: none;
+    color: var(--paper);
+    transition: padding-left 0.3s;
+  }
+  .contact-link:hover { padding-left: 8px; }
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(245,243,238,0.4);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .contact-link-value {
+    font-size: 17px;
+  }
+  .contact-link-arrow {
+    font-size: 20px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .contact-link:hover .contact-link-arrow {
+    opacity: 1;
+    transform: translate(4px, -4px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(245,243,238,0.4);
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(245,243,238,0.08);
+  }
+  footer span {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  .footer-tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up-delay-1 { transition-delay: 0.1s; }
+  .fade-up-delay-2 { transition-delay: 0.2s; }
+  .fade-up-delay-3 { transition-delay: 0.3s; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero { padding: 100px 24px 40px; }
+    .hero-content { grid-template-columns: 1fr; }
+    .manifesto-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .hero-bg-text { font-size: 80px; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PIXLANE<span></span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Hizmetler</a></li>
+    <li><a href="#process">Süreç</a></li>
+    <li><a href="#pricing">Fiyatlar</a></li>
+    <li><a href="#about">Hakkımızda</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">İletişim →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">Pixlane</div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-label">İstanbul, 2025 — Dijital Ürünler Stüdyosu</div>
+      <h1 class="hero-title">
+        İnsan vizyonu.<br>
+        <em>Hassas</em><br>
+        sonuçlar.
+      </h1>
+    </div>
+    <div class="hero-right">
+      <p class="hero-desc">
+        Web sitesi, e-ticaret, SaaS. Modern araçlarla, insan kontrolünde. Şişirilmiş fiyat yok, saçmalık yok — sadece işe yarayan ürünler.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          Konuşalım
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        <a href="#services" class="btn-ghost">Hizmetleri gör</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">7</div>
+          <div class="stat-label">Gün ort. teslimat</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">%100</div>
+          <div class="stat-label">Kaynak kodu size</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">Sabit</div>
+          <div class="stat-label">Fiyat, sürpriz yok</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-bottom-left">pixlane.co — TR / EN</div>
+    <div class="scroll-hint">
+      <span>Aşağı kaydır</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item">Web Sitesi <span>·</span> E-Ticaret <span>·</span> SaaS Geliştirme <span>·</span> Marka Kimliği <span>·</span> Modern Teknoloji <span>·</span> Hızlı Teslimat <span>·</span></div>
+    <div class="marquee-item">Web Sitesi <span>·</span> E-Ticaret <span>·</span> SaaS Geliştirme <span>·</span> Marka Kimliği <span>·</span> Modern Teknoloji <span>·</span> Hızlı Teslimat <span>·</span></div>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto" id="about-manifesto">
+  <div class="section-label">01 — Manifesto</div>
+  <div class="manifesto-grid">
+    <div class="manifesto-left">
+      <h2>Neden<br><em>farklıyız?</em></h2>
+    </div>
+    <div class="manifesto-text fade-up">
+      <p>Bazı şeyler yavaş yapılmak zorunda değil.</p>
+      <p>Pixlane, dijital ürünleri hızlı, temiz ve dürüstçe teslim etmek için kuruldu. Kurumsal web sitesinden e-ticaret'e, SaaS'tan marka kimliğine — her projede aynı prensip geçerli: gereksiz hiçbir şey yok.</p>
+      <p>Modern araçları kullanıyoruz. En iyilerini. Tasarımda, kodda, süreçte — teknolojiyi takip etmek bir tercih değil, müşterimize karşı bir <strong>sorumluluk</strong>.</p>
+      <p>Ama her projenin arkasında bir insan var. Sizi dinleyen, hedeflerinizi anlayan, teslimatta hesap veren. Araçlar değişir, bu değişmez.</p>
+      <p>Şişirilmiş fiyat yok. Uzayan toplantı yok. Kaynak kodunuz size ait, her zaman. Hızlı olmak kaliteden ödün vermek değil — <strong>doğru çalışmanın sonucu.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">02 — Hizmetler</div>
+  <div class="services-grid">
+    <div class="service-card fade-up">
+      <div class="service-num">01</div>
+      <span class="service-icon">◻</span>
+      <h3>Kurumsal Web Sitesi</h3>
+      <p>Hızlı, dönüşüm odaklı landing page ve kurumsal siteler. Etkileyici tasarım, mobil uyumlu, SEO hazır.</p>
+      <div class="service-price">₺4.500'den başlayan · 5–7 gün</div>
+    </div>
+    <div class="service-card fade-up fade-up-delay-1">
+      <div class="service-num">02</div>
+      <span class="service-icon">◈</span>
+      <h3>E-Ticaret</h3>
+      <p>Ödeme entegrasyonu, ürün yönetimi ve stok takibi ile tam online mağaza çözümü.</p>
+      <div class="service-price">₺9.900'den başlayan · 7–14 gün</div>
+    </div>
+    <div class="service-card fade-up fade-up-delay-2">
+      <div class="service-num">03</div>
+      <span class="service-icon">◎</span>
+      <h3>SaaS / Web Uygulaması</h3>
+      <p>Kullanıcı girişi, dashboard ve ölçeklenebilir altyapı ile özel web uygulaması geliştirme.</p>
+      <div class="service-price">₺19.900'den başlayan · 2–4 hafta</div>
+    </div>
+    <div class="service-card fade-up fade-up-delay-3">
+      <div class="service-num">04</div>
+      <span class="service-icon">◇</span>
+      <h3>Sosyal Medya</h3>
+      <p>Görsel kimlik, içerik takvimi, marka şablonları ve aylık sosyal medya yönetimi.</p>
+      <div class="service-price">₺2.500/ay'dan başlayan</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="section-label">03 — Nasıl çalışıyoruz</div>
+  <h2 class="process-title">Şeffaf süreç,<br><em>gerçek sonuçlar.</em></h2>
+  <div class="process-steps">
+    <div class="process-step fade-up">
+      <span class="step-num">01</span>
+      <h3>Keşif</h3>
+      <p>Kısa görüşmeyle hedeflerinizi anlıyoruz. Jargon yok, beklenti yönetimi var.</p>
+      <span class="step-tag">İNSAN</span>
+    </div>
+    <div class="process-step fade-up fade-up-delay-1">
+      <span class="step-num">02</span>
+      <h3>Teklif</h3>
+      <p>Net kapsam, sabit fiyat, gerçekçi süre. Her şey yazılı, her şey netleştirilmiş.</p>
+      <span class="step-tag">İNSAN</span>
+    </div>
+    <div class="process-step fade-up fade-up-delay-2">
+      <span class="step-num">03</span>
+      <h3>Geliştirme</h3>
+      <p>Modern araçlarla hızlı üretim. Günlük güncellemeler, canlı önizleme.</p>
+      <span class="step-tag">TEKNOLOJİ</span>
+    </div>
+    <div class="process-step fade-up fade-up-delay-3">
+      <span class="step-num">04</span>
+      <h3>Revizyon</h3>
+      <p>İki tur revizyon dahil. Birlikte doğru sonuca ulaşırız, acele etmeden.</p>
+      <span class="step-tag">İNSAN + TEKNOLOJİ</span>
+    </div>
+    <div class="process-step fade-up">
+      <span class="step-num">05</span>
+      <h3>Yayın</h3>
+      <p>Deployment biz hallederiz. Zamanında, sorunsuz, kaynak kodu tamamen size ait.</p>
+      <span class="step-tag">İNSAN</span>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section>
+  <div class="section-label">04 — Neden biz?</div>
+  <div class="why-grid">
+    <div class="why-left fade-up">
+      <h2>Büyük ajans kalitesi,<br><em>gerçek fiyat.</em></h2>
+      <p>Büyük ajanslar süreci büyütür, çünkü büyük süreç büyük fatura demek. Biz tersini seçtik.</p>
+      <p>Doğru araçları, doğru zamanda, doğru amaçla kullanmak — bu kadar.</p>
+    </div>
+    <ul class="why-list fade-up fade-up-delay-2">
+      <li class="why-item">
+        <span class="why-item-num">01</span>
+        <div class="why-item-text">
+          <h4>Dürüst fiyatlandırma</h4>
+          <p>Gizli ücret yok. Sabit fiyat, baştan netleştirilir. Her zaman.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-item-num">02</span>
+        <div class="why-item-text">
+          <h4>Gerçekten hızlı</h4>
+          <p>Çoğu proje 2 haftadan kısa. Modern iş akışı, gereksiz bekleme yok.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-item-num">03</span>
+        <div class="why-item-text">
+          <h4>Gerçek kod, gerçek performans</h4>
+          <p>Page builder yok. Her şey sıfırdan, kalıcı ve ölçeklenebilir.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-item-num">04</span>
+        <div class="why-item-text">
+          <h4>Her şey size ait</h4>
+          <p>Tam kaynak kodu. Kilitlenme yok, rehin ücreti yok, bağımlılık yok.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-item-num">05</span>
+        <div class="why-item-text">
+          <h4>Direkt iletişim</h4>
+          <p>Ürününüzü yapan kişiyle konuşursunuz. Aracı yok, kaybolma yok.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label">05 — Şeffaf fiyatlar</div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <span class="pricing-tag">Başlangıç</span>
+      <div class="pricing-name">Landing Page</div>
+      <div class="pricing-price">₺4.500</div>
+      <div class="pricing-period">tek seferlik · sürpriz yok</div>
+      <ul class="pricing-features">
+        <li>Landing page / kurumsal site</li>
+        <li>Mobil uyumlu tasarım</li>
+        <li>İletişim formu entegrasyonu</li>
+        <li>SEO temelleri</li>
+        <li>2 tur revizyon</li>
+        <li>5–7 günde teslim</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Başlayalım →</a>
+    </div>
+    <div class="pricing-card featured fade-up fade-up-delay-1">
+      <span class="pricing-tag">En Popüler · Büyüme</span>
+      <div class="pricing-name">E-Ticaret</div>
+      <div class="pricing-price">₺9.900</div>
+      <div class="pricing-period">tek seferlik · en popüler</div>
+      <ul class="pricing-features">
+        <li>E-ticaret mağaza (50 ürüne kadar)</li>
+        <li>İyzico / Stripe entegrasyonu</li>
+        <li>Admin paneli</li>
+        <li>E-posta bildirimleri</li>
+        <li>3 tur revizyon</li>
+        <li>10–14 günde teslim</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Başlayalım →</a>
+    </div>
+    <div class="pricing-card fade-up fade-up-delay-2">
+      <span class="pricing-tag">Özel / SaaS</span>
+      <div class="pricing-name">Web Uygulaması</div>
+      <div class="pricing-price">₺19.900+</div>
+      <div class="pricing-period">kapsama göre fiyat</div>
+      <ul class="pricing-features">
+        <li>SaaS / web uygulaması</li>
+        <li>Kullanıcı girişi ve yetkilendirme</li>
+        <li>Özel veritabanı & API</li>
+        <li>Admin paneli</li>
+        <li>Sınırsız revizyon</li>
+        <li>Kapsama göre süre</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Konuşalım →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">06 — Hakkımızda</div>
+  <div class="about-grid">
+    <div class="about-left fade-up">
+      <h2>Sade teknoloji,<br><em>gerçek sonuçlar.</em></h2>
+      <p>Pixlane, İstanbul merkezli bir dijital ürünler stüdyosudur. Küçük ve orta ölçekli işletmelere uygun bütçelerle profesyonel web siteleri, e-ticaret ve SaaS uygulamaları geliştiriyoruz.</p>
+      <p>Misyonumuz basit: büyük ajans kalitesini gerçek fiyatlara taşımak. Net kapsam, sabit fiyat, hızlı teslimat.</p>
+      <div class="tech-stack">
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">TypeScript</span>
+        <span class="tech-tag">Node.js</span>
+        <span class="tech-tag">PostgreSQL</span>
+        <span class="tech-tag">Shopify</span>
+        <span class="tech-tag">İyzico</span>
+        <span class="tech-tag">Vercel</span>
+        <span class="tech-tag">Railway</span>
+      </div>
+    </div>
+    <div class="about-right fade-up fade-up-delay-1">
+      <div class="about-detail">
+        <div class="about-detail-label">Şirket</div>
+        <div class="about-detail-value">Pixlane Dijital Hizmetler</div>
+      </div>
+      <div class="about-detail">
+        <div class="about-detail-label">Kuruluş</div>
+        <div class="about-detail-value">2025, İstanbul</div>
+      </div>
+      <div class="about-detail">
+        <div class="about-detail-label">Adres</div>
+        <div class="about-detail-value">Vizyon Park Ofis Plazaları, Yenibosna Merkez Mh.<br>29 Ekim Cd. B1 Blok No:5 Kat:7 — Bahçelievler / İstanbul</div>
+      </div>
+      <div class="about-detail">
+        <div class="about-detail-label">Platform</div>
+        <div class="about-detail-value">Fiverr · LinkedIn · Instagram</div>
+      </div>
+      <div class="about-detail">
+        <div class="about-detail-label">Dil</div>
+        <div class="about-detail-value">Türkçe · English</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-label">07 — İletişim</div>
+  <div class="contact-inner">
+    <div class="contact-left fade-up">
+      <h2>Bir şeyler<br>inşa edelim<br><em>mi?</em></h2>
+      <p>Projenizi anlatın. Kısa bir görüşmeyle kapsamı belirleyelim, size net bir fiyat ve süre verelim.</p>
+    </div>
+    <div class="contact-links fade-up fade-up-delay-1">
+      <a href="/cdn-cgi/l/email-protection#4b3b2233272a252e0b243e3f2724242065282426" class="contact-link">
+        <div>
+          <div class="contact-link-label">E-posta</div>
+          <div class="contact-link-value"><span class="__cf_email__" data-cfemail="8afae3f2e6ebe4efcae5fffee6e5e5e1a4e9e5e7">[email&#160;protected]</span></div>
+        </div>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+      <a href="https://wa.me/905461323464" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">WhatsApp</div>
+          <div class="contact-link-value">+90 546 132 34 64</div>
+        </div>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+      <a href="#" class="contact-link">
+        <div>
+          <div class="contact-link-label">Fiverr</div>
+          <div class="contact-link-value">fiverr.com/pixlane</div>
+        </div>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+      <a href="#" class="contact-link">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-value">linkedin.com/company/pixlane</div>
+        </div>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Pixlane · pixlane.co</span>
+  <span class="footer-tagline">Human vision. Precise execution.</span>
+  <span>İstanbul, Türkiye</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      cursor.style.background = '#c8f03c';
+      ring.style.opacity = '0';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      cursor.style.background = 'var(--ink)';
+      ring.style.opacity = '0.4';
+    });
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      nav.style.background = 'rgba(245,243,238,0.92)';
+      nav.style.backdropFilter = 'blur(12px
